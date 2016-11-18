@@ -1,5 +1,6 @@
 
 On Error Resume Next
+sckey = ""
 SelfPath = CreateObject("Scripting.FileSystemObject").GetFile(Wscript.ScriptFullName).ParentFolder.Path & "\"
 RootPath = SelfPath & "History\"
 isCors = True
@@ -8,9 +9,9 @@ bHour = 8
 eHour = 23
 HostUrl = "http://202.119.250.127:7555/Login.aspx"
 Call MakeUrlT(HostUrl, UrlT1, UrlT2)
-UrlT2T = "&BtnLogin=" & URLEncode("µÇ Â¼") & "&TxtPwd="
+UrlT2T = "&BtnLogin=" & URLEncode("ç™» å½•") & "&TxtPwd="
 If (UrlT2 <> UrlT2T) Then
-    Call WeChatAlert("ÍøÕ¾¹ÊÕÏ!")
+    Call WeChatAlert("ç½‘ç«™æ•…éšœ!")
     'Call FileWriter(RootPath & "Err1.txt", LongNow() & VbTab & GetPage(HostUrl), True)
     WScript.Quit
 End If
@@ -31,7 +32,7 @@ If (Trim(lstTxt) <> "") Then
 End If
 
 
-If (InStr(msgs, "µçÁ¿µÍ") > 0 And isCors = False) Then
+If (InStr(msgs, "ç”µé‡ä½") > 0 And isCors = False) Then
     Msgbox msgs
 End If
 
@@ -46,7 +47,7 @@ Sub MakeUrlT(HostUrl, UrlT1, UrlT2)
 End Sub
 
 Function WeChatAlert(msgs)
-    url = "http://sc.ftqq.com/SCU2447T4ca73300c167a42a530ade37c0ea7ddb57e66eba92992.send?text=Elec&desp=" & msgs
+url = "http://sc.ftqq.com/" & sckey & ".send?text=Elec&desp=" & msgs
     'strHtml = GetPage(url)
     If (InStr(strHtml, "success") > 0) Then
         WeChatAlert = True
@@ -90,7 +91,7 @@ Function CheckElec(room, psw, name)
     url = UrlT1 & room & UrlT2 & psw
     strHtml = GetPage(url)
 
-    If (InStr(strHtml, "ÒÔÉÏµçÁ¿½ö¹©²Î¿¼") > 0) Then
+    If (InStr(strHtml, "ä»¥ä¸Šç”µé‡ä»…ä¾›å‚è€ƒ") > 0) Then
         Call FileWriter(lstPath, room & VbTab & psw & VbTab & name, True)
         elec = Trim(GetElementInnerTextByIdFromHtml("LabElec", strHtml))
         If (name = "") Then
@@ -109,10 +110,10 @@ Function CheckElec(room, psw, name)
                     End If
                 Next
 
-                '´ò¿ªÎÄ¼ş£¬object.OpenTextFile(filename[, iomode{1=ForReading;2=ForWriting3=ForAppending}[, create[, format{null=ansi}]]])
+                'æ‰“å¼€æ–‡ä»¶ï¼Œobject.OpenTextFile(filename[, iomode{1=ForReading;2=ForWriting3=ForAppending}[, create[, format{null=ansi}]]])
                 Set file = fso.OpenTextFile(txtPath, 8, False)
             Else
-                '´´½¨ÎÄ¼ş£¬object.CreateTextFile(filename,[ overwrite,[ unicode{True=UTF8}]])
+                'åˆ›å»ºæ–‡ä»¶ï¼Œobject.CreateTextFile(filename,[ overwrite,[ unicode{True=UTF8}]])
                 Set file = fso.CreateTextFile(txtPath, False, False)
             End If
 
@@ -120,18 +121,18 @@ Function CheckElec(room, psw, name)
                 lastElec = Split(strLine, VbTab)(1)
                 difElec = lastElec - elec
 
-                'Ğ´ÈëÊı¾İ
+                'å†™å…¥æ•°æ®
 
                 'If (InStr(strLine,Split(LongNow(), " ")(0)) = 0 And (lastElec <> elec Or elec = 0)) Then
                 'If (lastElec <> elec Or (elec = 0 And InStr(strLine, Split(LongNow(), " ")(0)) = 0)) Then
                 If (difElec <> 0 Or (difElec = 0 And InStr(strLine, Split(LongNow(), " ")(0)) = 0)) Then
-                    'Ğ´ÈëÎÄ¼şÄÚÈİ£¬ÓĞÈıÖÖ·½·¨£ºwrite(x)Ğ´Èëx¸ö×Ö·û£¬writelineĞ´Èë»»ĞĞ£¬writeblanklines(n)Ğ´Èën¸ö¿ÕĞĞ
+                    'å†™å…¥æ–‡ä»¶å†…å®¹ï¼Œæœ‰ä¸‰ç§æ–¹æ³•ï¼šwrite(x)å†™å…¥xä¸ªå­—ç¬¦ï¼Œwritelineå†™å…¥æ¢è¡Œï¼Œwriteblanklines(n)å†™å…¥nä¸ªç©ºè¡Œ
                     file.WriteLine LongNow() & VbTab & elec
                 End If
 
-                'ÅĞ¶ÏÒì³£
+                'åˆ¤æ–­å¼‚å¸¸
                 If (difElec > 30 Or difElec < -300 Or elec > 500) Then
-                    rst = rst & VbTab & "¿´ËÆÒì³££¡" & VbTab & elec
+                    rst = rst & VbTab & "çœ‹ä¼¼å¼‚å¸¸ï¼" & VbTab & elec
                     'Call FileWriter(RootPath & "ErrUrl.txt", LongNow() & VbTab & url, True)
                     'Call FileWriter(RootPath & "Err3.txt", LongNow() & VbTab & strHtml, True)
 		End If
@@ -140,24 +141,24 @@ Function CheckElec(room, psw, name)
                 file.WriteLine LongNow() & VbTab & elec
             End If
 
-            '¹ØÎÄ¼ş
+            'å…³æ–‡ä»¶
             file.Close
             Set file = Nothing
             Set fso = Nothing
 
-            'ÅĞ¶ÏµçÁ¿µÍ
+            'åˆ¤æ–­ç”µé‡ä½
             If (elec < 20 And difElec <> 0) Then
-                rst = rst & VbTab & "µçÁ¿µÍ£¡" & VbTab & elec
+                rst = rst & VbTab & "ç”µé‡ä½ï¼" & VbTab & elec
             End If
         Else
-            rst = rst & VbTab & "Î´»ñÈ¡µ½µçÁ¿£¡"
+            rst = rst & VbTab & "æœªè·å–åˆ°ç”µé‡ï¼"
         End If
-    ElseIf (InStr(strHtml, "ÓÃ»§Ãû»òÃÜÂë´íÎó") > 0) Then
-        rst = rst & VbTab & name & "ÃÜÂë´íÎó" & room & "_" & psw
+    ElseIf (InStr(strHtml, "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯") > 0) Then
+        rst = rst & VbTab & name & "å¯†ç é”™è¯¯" & room & "_" & psw
         Call FileWriter(lstPath, "'" & room & VbTab & psw & VbTab & name, True)
         'Call FileWriter(RootPath & "ErrPsw.txt", LongNow() & VbTab & room & VbTab & psw & VbTab & name , True)
     Else
-        rst = rst & VbTab & "µÇÂ¼Ê§°Ü£¡"
+        rst = rst & VbTab & "ç™»å½•å¤±è´¥ï¼"
         'Call FileWriter(RootPath & "ErrUrl.txt", LongNow() & VbTab & url, True)
         'Call FileWriter(RootPath & "Err2.txt", LongNow() & VbTab & strHtml, True)
     End If
@@ -229,8 +230,8 @@ End Function
 
 Function GetElementInnerTextByIdFromHtml(strId, strHtml)
     Set html = CreateObject("HtmlFile")
-    html.designMode = "on" ' ¿ªÆô±à¼­Ä£Ê½
-    html.write strHtml ' Ğ´ÈëÊı¾İ
+    html.designMode = "on" ' å¼€å¯ç¼–è¾‘æ¨¡å¼
+    html.write strHtml ' å†™å…¥æ•°æ®
     strElement = ""
     strElement = html.getElementById(strId).innerText
     Set html = Nothing
@@ -240,8 +241,8 @@ End Function
 
 Function GetElementValueByIdFromHtml(strId, strHtml)
     Set html = CreateObject("HtmlFile")
-    html.designMode = "on" ' ¿ªÆô±à¼­Ä£Ê½
-    html.write strHtml ' Ğ´ÈëÊı¾İ
+    html.designMode = "on" ' å¼€å¯ç¼–è¾‘æ¨¡å¼
+    html.write strHtml ' å†™å…¥æ•°æ®
     strElement = ""
     strElement = html.getElementById(strId).Value
     Set html = Nothing
@@ -251,8 +252,8 @@ End Function
 
 Function GetTitleFromHtml(strHtml)
     Set html = CreateObject("HtmlFile")
-    html.designMode = "on" ' ¿ªÆô±à¼­Ä£Ê½
-    html.write strHtml ' Ğ´ÈëÊı¾İ
+    html.designMode = "on" ' å¼€å¯ç¼–è¾‘æ¨¡å¼
+    html.write strHtml ' å†™å…¥æ•°æ®
     strElement = ""
     strElement = html.getElementsByTagName("title")(0).innerText
     Set html = Nothing
